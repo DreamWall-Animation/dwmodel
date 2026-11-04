@@ -1,0 +1,404 @@
+# MIT License
+#
+# Copyright (c) 2026 DreamWall
+# Authors: Olivier Evers & Lionel Brouyère
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+show:
+  code: code
+  title: string
+  fps: float
+  image_size: image_size
+  tasks: set:entity@task
+  thumbnail: entity@thumbnail
+  element_kinds: list:name
+  representation_kinds: list:name
+  feedback_sources: list:name
+  work_types: list:name
+  asset_categories: list:name
+  last_media: list:entity@media
+  last_versions: list:entity@version
+  last_workfiles: list:entity@workfile
+  overtimes: list:entity@worktime
+  settings: list:entity@settings
+
+asset:
+  code: code
+  name: string
+  category: asset_category
+  asset_instances: set:entity@asset_instance
+  tasks: set:entity@task
+  description: string
+  notes: list:entity@note
+  elements: set:entity@element
+  thumbnail: entity@thumbnail
+  tags: set:tag
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+element:
+  name: name
+  asset: entity@asset
+  kind: element_kind
+  variants: set:entity@variant
+  versions: list:entity@version
+  tasks: set:entity@task
+  notes: list:entity@note
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+variant:
+  name: code
+  element: entity@element
+  versions: list:entity@version
+  tasks: set:entity@task
+  notes: list:entity@note
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+shot:
+  code: code
+  name: name
+  duration: int
+  image_size: image_size
+  fps: float
+  tasks: set:entity@task
+  main_sequence: entity@sequence
+  sequences: set:entity@sequence
+  asset_instances: set:entity@asset_instance
+  description: string
+  thumbnail: entity@thumbnail
+  tags: set:tag
+  notes: list:entity@note
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+asset_instance:
+  shot: entity@shot|sequence|episode
+  asset: entity@asset
+  name: name
+  variant_instances: set:entity@variant_instance
+  external_ids: list:string
+  deleted: bool
+
+variant_instance:
+  asset_instance: entity@asset_instance
+  variant: entity@variant
+  version: entity@version
+  versions: list:entity@version
+  deleted: bool
+
+sequence:
+  code: code
+  name: name
+  image_size: image_size
+  fps: float
+  title: string
+  shots: set:entity@shot
+  tasks: set:entity@task
+  main_episode: entity@episode
+  episodes: set:entity@episode
+  asset_instances: set:entity@asset_instance
+  montage: list:entity@cut
+  description: string
+  notes: list:entity@note
+  thumbnail: entity@thumbnail
+  tags: set:tag
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+episode:
+  code: code
+  name: name
+  image_size: image_size
+  fps: float
+  title: string
+  sequences: set:entity@sequence
+  tasks: set:entity@task
+  asset_instances: set:entity@asset_instance
+  description: string
+  notes: list:entity@note
+  thumbnail: entity@thumbnail
+  tags: set:tag
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+version:
+  code: code
+  variant: entity@variant
+  variant_instance: entity@variant_instance
+  shot: entity@shot
+  wip: bool
+  conformed: bool
+  source: entity@workfile
+  compatibility: set:entity@version
+  tasks: set:entity@task
+  thumbnail: entity@thumbnail
+  layer_index: int
+  layer_blend_mode: string
+  layer_source: code
+  representations: set:entity@representation
+  comment: string
+  media: list:entity@media
+  notes: list:entity@note
+  datetime: datetime
+  user: entity@user
+  number: int
+  contained_variants: set:entity@variant
+  external_ids: list:string
+  deleted: bool
+  settings: list:entity@settings
+
+representation:
+  kind: representation
+  datetime: datetime
+  version: entity@version
+  files_to_publish: list:path
+  files_sequences: list:string
+  files: set:entity@file
+  site: entity@site
+  user: entity@user
+  confirmed: bool
+  deleted: bool
+
+file:
+  path: path
+  parent: entity@media|workfile|representation
+  size: int
+  md5: string
+  file_type: string
+  sequence: string
+  deleted: bool
+  external_ids: list:string
+
+workfile:
+  code: code
+  name: string
+  user: entity@user
+  file: entity@file
+  file_path: path
+  content_type: string
+  conformed: bool
+  comment: string
+  datetime: datetime
+  thumbnail: entity@thumbnail
+  external_ids: list:string
+  deleted: bool
+  duration: int
+  task: entity@task
+  media: set:entity@media
+  versions: set:entity@version
+  required_files: set:entity@file
+
+media:
+  code: code
+  name: string
+  entity: entity@task|note|version|workfile
+  user: entity@user
+  file: entity@file
+  media_path: path
+  notes: list:entity@note
+  datetime: datetime
+  source: entity@workfile
+  thumbnail: entity@thumbnail
+  external_ids: list:string
+  deleted: bool
+
+thumbnail:
+  path: path
+
+user:
+  code: code
+  display_name: string
+  last_name: string
+  first_name: string
+  email: email
+  thumbnail: entity@thumbnail
+  departments: set:entity@department
+  teams: set:entity@team
+  sites: set:entity@site
+  tasks: set:entity@task
+  worktimes: set:entity@worktime
+  overtimes: set:entity@worktime
+  workfiles: list:entity@workfile
+  last_media: list:entity@media
+  last_versions: list:entity@version
+  last_workfiles: list:entity@workfile
+  active: bool
+  datetime: datetime
+  access_level: string
+  external_ids: list:string
+  settings: list:entity@settings
+
+task:
+  code: code
+  name: string
+  department: entity@department
+  entity: entity@asset|shot|sequence|episode|element|variant|show
+  group: entity@group
+  task_type: task_type
+  user: entity@user
+  user_history: list:string
+  site: entity@site
+  status: status
+  status_history: list:string
+  workfiles: list:entity@workfile
+  versions: set:entity@version
+  media: list:entity@media
+  worktimes: set:entity@worktime
+  worktimes_forbidden: bool
+  briefing: string
+  notes: list:entity@note
+  thumbnail: entity@thumbnail
+  external_ids: list:string
+  deleted: bool
+  target_quota: float
+  bid_weight: float
+  duration: int
+  priority: int
+  masters: set:entity@task
+  children: set:entity@task
+  planned_start_date: date
+  planned_take1_date: date
+  planned_end_date: date
+  receipt_date: date
+  real_start_date: date
+  delivery_dates: list:date
+  external_retake_dates: list:date
+  real_end_date: date
+
+status:
+  code: code
+  weight: float
+  index: int
+  enabled_for_feedback: bool
+  deleted: bool
+
+task_type:
+  code: code
+  comment_mandatory: bool
+  allow_worktime: bool
+  allow_worktype: bool
+  episodic: bool
+  allowed_entity_types: set:entity_type
+  bid_frame_dependent: bool
+  default_bid_weight_ratio: float
+  production_order: int
+  category: string
+  default_target_quota: float
+  deleted: bool
+  settings: list:entity@settings
+
+group:
+  code: code
+  name: string
+  production_order: int
+  tasks: set:entity@task
+  deleted: bool
+
+note:
+  code: code
+  task: entity@any
+  entity: entity@any
+  reply_to: entity@note
+  replies: set:entity@note
+  comment: string
+  comment_history: list:string
+  user: entity@user
+  media: list:entity@media
+  datetime: datetime
+  external_ids: list:string
+  deleted: bool
+  feedback: bool
+  external: bool
+  entity_approved: bool
+  briefing_change: bool
+  feedback_number: int
+  feedback_source: feedback_source
+  feedback_source_name: string
+  feedback_status: feedback_status
+  feedback_datetime: datetime
+
+worktime:
+  user: entity@user
+  task: entity@task
+  date: date
+  work_type: work_type
+  role: role
+  external: bool
+  time_spent: time_spent
+  overtime: bool
+  overtime_reviewed: bool
+  overtime_accepted: bool
+  comment: string
+  deleted: bool
+
+site:
+  code: code
+  name: string
+  location: string
+  thumbnail: entity@thumbnail
+  deleted: bool
+  settings: list:entity@settings
+
+department:
+  code: code
+  name: string
+  users: set:entity@user
+  teams: set:entity@team
+  thumbnail: entity@thumbnail
+  deleted: bool
+  settings: list:entity@settings
+
+team:
+  code: code
+  name: string
+  users: set:entity@user
+  departments: set:entity@department
+  thumbnail: entity@thumbnail
+  deleted: bool
+  settings: list:entity@settings
+
+settings:
+  code: code
+  name: string
+  entity: entity@settings|show|asset|element|variant|shot|sequence|episode|user|task_type|site|department|team|version
+  content: string
+  history: list:string
+  allow_history: bool
+  write_access_level: string
+  settings: list:entity@settings
+  datetime: datetime
+  user: entity@user
+  deleted: bool
+
+link:
+  file: entity@file
+  expiration: datetime
+  user: entity@user
+  download_count: int
+  deleted: bool
